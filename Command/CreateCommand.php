@@ -40,7 +40,7 @@ class CreateCommand extends AbstractCommand
             'Name of your module in \'Vendor_Module\' format.'
         );
         $this->setName('ihb:module-create');
-        $this->setDescription('Creates simple Magento 2 module architecture.');
+        $this->setDescription('Creates simple Magento 2 module structure.');
 
         parent::configure();
     }

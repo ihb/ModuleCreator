@@ -95,6 +95,8 @@ class Creator
     }
 
     /**
+     * init
+     *
      * @param $ModuleName
      * @return string
      */
@@ -166,7 +168,8 @@ class Creator
     }
 
     /**
-     * Creates simple Magento 2 architecture depends on passed param.
+     * Creates simple Magento 2 structure depends on passed param.
+     *
      * @param $dir
      */
     private function createDirsFiles($dir)
@@ -208,6 +211,7 @@ class Creator
 
     /**
      * registration.php file content
+     *
      * @return string
      */
     private function getRegistrationPhpContent()
@@ -225,6 +229,7 @@ class Creator
 
     /**
      * composer.json file content
+     *
      * @return string
      */
     private function getComposerJsonContent()
@@ -251,6 +256,7 @@ class Creator
 
     /**
      * Controller/Index/Index.php file content
+     *
      * @return string
      */
     private function getControllerPhpContent()
@@ -276,6 +282,7 @@ class Index extends Action
 
     /**
      * etc/module.xml file content
+     *
      * @return string
      */
     private function getModuleXmlContent()
@@ -291,6 +298,7 @@ class Index extends Action
 
     /**
      * etc/frontend/routes.xml file content
+     *
      * @return string
      */
     private function getRoutesXmlContent()
