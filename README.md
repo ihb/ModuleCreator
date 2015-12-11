@@ -28,7 +28,7 @@ After Module Creator activated, just run `php -f bin/magento ihb:module-create V
 create simple module structure in `app/code/Vendor/Module` folder.
 
 ### Test Controller ###
-You can test your module in test controller. Go to `http://<your-domain/<vendor><moduleName>/index/index url`
+You can test your module in test controller. Go to `http://<your-domain/<vendor><moduleName>/index/index` url
 
 ### Contributing ###
 Feel free to change anything you want to increase Module Creator functionality.
