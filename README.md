@@ -19,8 +19,10 @@ example:
         ...
     ]
 ```
-Run `composer require ihb/modulecreator:dev-master`
-Run `php -f bin/magento setup:upgrade` to activate Module Creator.
+
+Run ```composer require ihb/modulecreator:dev-master```
+
+Run ```php -f bin/magento setup:upgrade``` to activate Module Creator.
 
 #### How to use ###
 After Module Creator activated, just run `php -f bin/magento ihb:module-create Vendor_Module` command. This will
