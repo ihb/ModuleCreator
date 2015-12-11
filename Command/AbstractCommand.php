@@ -11,13 +11,23 @@ use \Magento\Framework\ObjectManagerInterface;
  */
 class AbstractCommand extends Command
 {
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
     protected $objectManager;
+
+    /**
+     * @param ObjectManagerInterface $manager
+     */
     public function __construct(ObjectManagerInterface $manager)
     {
         $this->objectManager = $manager;
         parent::__construct();
     }
-    
+
+    /**
+     * @return ObjectManagerInterface
+     */
     protected function getObjectManager()
     {
         return $this->objectManager;

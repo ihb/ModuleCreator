@@ -14,14 +14,24 @@ use \Magento\Framework\ObjectManagerInterface;
  */
 class CreateCommand extends AbstractCommand
 {
+    /**
+     * @var \Ihb\ModuleCreator\Model\Creator
+     */
     protected $creator;
 
+    /**
+     * @param ObjectManagerInterface $objectManager
+     * @param Creator $creator
+     */
     public function __construct(ObjectManagerInterface $objectManager, Creator $creator)
     {
         $this->creator = $creator;
         parent::__construct($objectManager);
     }
 
+    /**
+     * configure
+     */
     protected function configure()
     {
         $this->addArgument(
@@ -35,6 +45,11 @@ class CreateCommand extends AbstractCommand
         parent::configure();
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return mixed
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $creator = $this->creator;

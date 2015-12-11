@@ -117,11 +117,12 @@ class Creator
     }
 
     /**
+     * create
+     *
      * @return string
      */
     private function create()
     {
-
         try {
             if (empty ($this->vendor) || empty ($this->module)) {
                 throw new Exception('Please, enter name of your module in \'Vendor_ModuleName\' format.');
