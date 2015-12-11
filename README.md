@@ -20,8 +20,7 @@ example:
     ]
 ```
 
-Run ```composer require ihb/modulecreator:dev-master```
-
+Run ```composer require ihb/modulecreator:dev-master```.
 Run ```php -f bin/magento setup:upgrade``` to activate Module Creator.
 
 #### How to use ###
