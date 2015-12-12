@@ -1,0 +1,20 @@
+{
+  "name": "ihb/modulecreator",
+  "description": "Magento 2 Module Creator",
+  "type": "magento2-module",
+  "version": "100.0.0",
+  "license": [
+    "proprietary"
+  ],
+  "require": {
+    "php": "~5.5.0|~5.6.0|~7.0.0"
+  },
+  "extra": {
+    "map": [
+      [
+        "*",
+        "Ihb/ModuleCreator"
+      ]
+    ]
+  }
+}
