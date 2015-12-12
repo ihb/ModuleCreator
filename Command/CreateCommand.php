@@ -4,7 +4,7 @@ namespace Ihb\ModuleCreator\Command;
 use \Symfony\Component\Console\Input\InputArgument;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
-use \Ihb\ModuleCreator\Model\Creator;
+use \Ihb\ModuleCreator\Model\ModuleStructureCreator;
 use \Magento\Framework\ObjectManagerInterface;
 
 /**
@@ -15,17 +15,17 @@ use \Magento\Framework\ObjectManagerInterface;
 class CreateCommand extends AbstractCommand
 {
     /**
-     * @var \Ihb\ModuleCreator\Model\Creator
+     * @var \Ihb\ModuleCreator\Model\ModuleStructureCreator
      */
-    protected $creator;
+    protected $moduleStructureCreator;
 
     /**
      * @param ObjectManagerInterface $objectManager
-     * @param Creator $creator
+     * @param ModuleStructureCreator $moduleStructureCreator
      */
-    public function __construct(ObjectManagerInterface $objectManager, Creator $creator)
+    public function __construct(ObjectManagerInterface $objectManager, ModuleStructureCreator $moduleStructureCreator)
     {
-        $this->creator = $creator;
+        $this->moduleStructureCreator = $moduleStructureCreator;
         parent::__construct($objectManager);
     }
 
@@ -52,8 +52,8 @@ class CreateCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $creator = $this->creator;
-        $response  = $creator->init($input->getArgument('moduleName'));
+        $moduleStructureCreator = $this->moduleStructureCreator;
+        $response  = $moduleStructureCreator->init($input->getArgument('moduleName'));
 
         $output->writeln(
             $response

@@ -8,11 +8,11 @@ use \Magento\Framework\App\Filesystem\DirectoryList;
 use \Magento\Framework\Filesystem;
 
 /**
- * Class Creator
+ * Class ModuleStructureCreator
  * @package Ihb\ModuleCreator\Model
  * @author Dmitriy Antonenko <indaheartbeat@gmail.com>
  */
-class Creator
+class ModuleStructureCreator
 {
     const REGISTRATION_FILENAME = 'registration.php';
     const COMPOSER_FILENAME     = 'composer.json';
@@ -141,7 +141,7 @@ class Creator
                 throw new \Exception('Module folder with this name already exist! Please, change the name of your module folder.');
             }
 
-            $this->createDirStructure();
+            $this->createDirFileStructure();
 
             return 'Module was successfully created, check it out in ' . "'" . $this->moduleDir . "'" . ' folder.
                    Please, run \'setup:upgrade\' command to enable module.';
@@ -152,60 +152,128 @@ class Creator
     }
 
     /**
-     * Declare dirs array and iterate it. Creates registration.php and composer.json files.
+     * Declare dirs array and iterate it.
      */
-    private function createDirStructure()
+    private function createDirFileStructure()
     {
         $dirsArray = array('Block', 'Controller', 'etc', 'Helper', 'Model', 'Observer', 'Test', 'Setup', 'view');
 
-        foreach($dirsArray as $dir) {
+        foreach ($dirsArray as $dir) {
             mkdir($this->moduleDir . $dir);
-            $this->createDirsFiles($dir);
+
+            $fullDirName = sprintf("%s%s/", $this->moduleDir, $dir);
+            $method = sprintf("fill%sDir", ucfirst($dir));
+            if (method_exists($this, $method)) {
+                call_user_func([$this, $method], $fullDirName);
+            }
         }
-        file_put_contents($this->moduleDir . self::REGISTRATION_FILENAME, $this->getRegistrationPhpContent());
-        file_put_contents($this->moduleDir . self::COMPOSER_FILENAME, $this->getComposerJsonContent());
+
+        $this->createRootFiles();
     }
 
     /**
-     * Creates simple Magento 2 structure depends on passed param.
-     *
-     * @param $dir
+     * create root files - composer.json and registration.php
      */
-    private function createDirsFiles($dir)
+    public function createRootFiles() {
+        file_put_contents($this->moduleDir . self::REGISTRATION_FILENAME, $this->getRegistrationPhpContent());
+        file_put_contents($this->moduleDir . self::COMPOSER_FILENAME, $this->getComposerJsonContent());
+
+    }
+
+    /**
+     * Fill Block dir
+     *
+     * @param $fullDirName
+     */
+    private function fillBlockDir($fullDirName)
     {
-        $fullDir = $this->moduleDir . $dir . '/';
-        switch ($dir) {
-            case 'Block' :
-                break;
-            case 'Controller' :
-                mkdir($fullDir . 'Index');
-                file_put_contents($fullDir . 'Index/Index.php', $this->getControllerPhpContent());
-                break;
-            case 'etc' :
-                mkdir($fullDir . 'frontend');
-                mkdir($fullDir . 'adminhtml');
-                file_put_contents($fullDir . 'module.xml', $this->getModuleXmlContent());
-                file_put_contents($fullDir . 'frontend/routes.xml', $this->getRoutesXmlContent());
-                break;
-            case 'Helper' :
-                break;
-            case 'Model' :
-                break;
-            case 'Observer' :
-                break;
-            case 'Test' :
-                mkdir($fullDir . 'Unit');
-                break;
-            case 'Setup' :
-                break;
-            case 'view' :
-                mkdir($fullDir . 'frontend');
-                mkdir($fullDir . 'adminhtml');
-                mkdir($fullDir . 'frontend/layout');
-                mkdir($fullDir . 'frontend/templates');
-                mkdir($fullDir . 'frontend/web');
-                break;
-        }
+
+    }
+
+    /**
+     * @param $fullDirName
+     */
+    private function fillControllerDir($fullDirName)
+    {
+        mkdir($fullDirName . 'Index');
+        file_put_contents($fullDirName . 'Index/Index.php', $this->getControllerPhpContent());
+    }
+
+    /**
+     * Fill etc dir
+     *
+     * @param $fullDirName
+     */
+    private function fillEtcDir($fullDirName)
+    {
+        mkdir($fullDirName . 'frontend');
+        mkdir($fullDirName . 'adminhtml');
+        file_put_contents($fullDirName . 'module.xml', $this->getModuleXmlContent());
+        file_put_contents($fullDirName . 'frontend/routes.xml', $this->getRoutesXmlContent());
+    }
+
+    /**
+     *  Fill Helper dir
+     *
+     * @param $fullDirName
+     */
+    private function fillHelperDir($fullDirName)
+    {
+
+    }
+
+    /**
+     * Fill Model dir
+     *
+     * @param $fullDirName
+     */
+    private function fillModelDir($fullDirName)
+    {
+
+    }
+
+    /**
+     * Fill Observer dir
+     *
+     * @param $fullDirName
+     */
+    private function fillObserverDir($fullDirName)
+    {
+
+    }
+
+    /**
+     * Fill Test dir
+     *
+     * @param $fullDirName
+     */
+    private function fillTestDir($fullDirName)
+    {
+        mkdir($fullDirName . 'Unit');
+    }
+
+    /**
+     * Fill Setup dir
+     *
+     * @param $fullDirName
+     */
+    private function fillSetupDir($fullDirName)
+    {
+
+    }
+
+    /**
+     * Fill View dir
+     *
+     * @param $fullDirName
+     */
+    private function fillViewDir($fullDirName)
+    {
+        mkdir($fullDirName . 'frontend');
+        mkdir($fullDirName . 'adminhtml');
+        mkdir($fullDirName . 'frontend/layout');
+        mkdir($fullDirName . 'frontend/templates');
+        mkdir($fullDirName . 'frontend/web');
     }
 
     /**
@@ -238,15 +306,21 @@ class Creator
   "description": "Magento 2 ' . $this->vendor . ' ' . $this->module . '",
   "require": {
     "php": "~5.5.0|~5.6.0|~7.0.0",
-    "magento/module-config": "1.0.0-beta",
-    "magento/module-backend": "1.0.0-beta",
     "magento/magento-composer-installer": "*"
   },
   "type": "magento2-module",
   "version": "100.0.0",
   "license": [
     "proprietary"
-  ]
+  ],
+  "extra": {
+    "map": [
+      [
+        "*",
+        "' . $this->vendor . '/' . $this->module . '"
+      ]
+    ]
+  }
 }
         ';
 
