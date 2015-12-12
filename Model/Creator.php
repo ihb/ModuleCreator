@@ -26,7 +26,7 @@ class Creator
      *
      * @var string
      */
-    private $ModuleName;
+    private $moduleName;
 
     /**
      * Vendor name
@@ -97,18 +97,17 @@ class Creator
     /**
      * init
      *
-     * @param $ModuleName
+     * @param $moduleName
      * @return string
      */
-    public function init($ModuleName)
+    public function init($moduleName)
     {
-        $directoryList = $this->directoryList;
         /** @var \Magento\Framework\Filesystem\Directory\ReadInterface|\Magento\Framework\Filesystem\Directory\Read $reader */
-        $reader = $this->fileSystem->getDirectoryRead($directoryList::APP);
+        $reader = $this->fileSystem->getDirectoryRead(DirectoryList::APP);
         $appAbsolutePath = $reader->getAbsolutePath();
 
-        $modulePathSplit    = explode("_", $ModuleName);
-        $this->ModuleName = $ModuleName;
+        $modulePathSplit    = explode("_", $moduleName);
+        $this->moduleName   = $moduleName;
         $this->vendor       = $modulePathSplit[0];
         $this->module       = $modulePathSplit[1];
         $this->codeDir      = $appAbsolutePath . self::CODE_DIR;
@@ -127,9 +126,9 @@ class Creator
     {
         try {
             if (empty ($this->vendor) || empty ($this->module)) {
-                throw new Exception('Please, enter name of your module in \'Vendor_ModuleName\' format.');
+                throw new \Exception('Please, enter name of your module in \'Vendor_moduleName\' format.');
             } else if ($this->dataHelper->checkForReservedWords($this->vendor) || $this->dataHelper->checkForReservedWords($this->module)) {
-                throw new Exception('Your VendorName/ModuleName contains PHP reserved words/constants, please, change the name of your model.');
+                throw new \Exception('Your VendorName/ModuleName contains PHP reserved words/constants, please, change the name of your module.');
             }
 
             if (!file_exists($this->vendorDir)) {
@@ -139,7 +138,7 @@ class Creator
             if (!file_exists($this->moduleDir)) {
                 mkdir($this->moduleDir);
             } else {
-                throw new Exception('Module folder with this name already exist! Please, change the name of your model folder.');
+                throw new \Exception('Module folder with this name already exist! Please, change the name of your module folder.');
             }
 
             $this->createDirStructure();
@@ -147,7 +146,7 @@ class Creator
             return 'Module was successfully created, check it out in ' . "'" . $this->moduleDir . "'" . ' folder.
                    Please, run \'setup:upgrade\' command to enable module.';
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
     }
@@ -216,15 +215,15 @@ class Creator
      */
     private function getRegistrationPhpContent()
     {
-        $response = '<?php
+        $template = '<?php
     \Magento\Framework\Component\ComponentRegistrar::register(
         \Magento\Framework\Component\ComponentRegistrar::MODULE,
-        ' . "'" . $this->ModuleName . "'" .',
+        ' . "'" . $this->moduleName . "'" .',
         __DIR__
     );
         ';
 
-        return $response;
+        return $template;
     }
 
     /**
@@ -234,24 +233,24 @@ class Creator
      */
     private function getComposerJsonContent()
     {
-        $response = '{
-  "name": "' . $this->vendor . '/' . $this->module .'",
-  "description": "N/A",
+        $template = '{
+  "name": "' . strtolower($this->vendor) . '/' . strtolower($this->module) .'",
+  "description": "Magento 2 ' . $this->vendor . ' ' . $this->module . '",
   "require": {
-    "php": "~5.5.0|~5.6.0",
+    "php": "~5.5.0|~5.6.0|~7.0.0",
     "magento/module-config": "1.0.0-beta",
     "magento/module-backend": "1.0.0-beta",
     "magento/magento-composer-installer": "*"
   },
   "type": "magento2-module",
-  "version": "1.0.0",
+  "version": "100.0.0",
   "license": [
     "proprietary"
   ]
 }
         ';
 
-        return $response;
+        return $template;
     }
 
     /**
@@ -261,7 +260,7 @@ class Creator
      */
     private function getControllerPhpContent()
     {
-        $response ='<?php
+        $template ='<?php
 
 namespace ' . $this->vendor . "\\" . $this->module . '\Controller\Index;
 
@@ -277,7 +276,7 @@ class Index extends Action
 }
         ';
 
-        return $response;
+        return $template;
     }
 
     /**
@@ -287,13 +286,13 @@ class Index extends Action
      */
     private function getModuleXmlContent()
     {
-        $response = '<?xml version="1.0"?>
+        $template = '<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/Module/etc/module.xsd">
-    <module name="' . $this->ModuleName . '" setup_version="0.0.1"/>
+    <module name="' . $this->moduleName . '" setup_version="2.0.0"/>
 </config>
 ';
 
-        return $response;
+        return $template;
     }
 
     /**
@@ -304,16 +303,16 @@ class Index extends Action
     private function getRoutesXmlContent()
     {
         $routeName = strtolower($this->vendor) . strtolower($this->module);
-        $response = '<?xml version="1.0"?>
+        $template = '<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/App/etc/routes.xsd">
     <router id="standard">
         <route id="' . $routeName . '" frontName="' . $routeName . '">
-            <module name="' . $this->ModuleName . '"/>
+            <module name="' . $this->moduleName . '"/>
         </route>
     </router>
 </config>';
 
-        return $response;
+        return $template;
     }
 }
 
